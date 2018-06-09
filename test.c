@@ -1,12 +1,18 @@
-#include <stdio.h>
-#include <ap_cint.h>
+#include <iostream>
+#include <ap_int.h>
+#include <math.h>
+#include <time.h>
+#include <stdlib.h>
+
+using namespace std;
+
+int test();
 
 int main()
 {
-	printf("******************************************\n");
-	printf("Starting.....\n\n");
-	printf("Calling my_rsa_1024\n");
-	my_rsa_1024();
+	cout << "\n********************************************\n" << " Starting ..." << "\n";
+
+	test();
 
 return 0;
 }
