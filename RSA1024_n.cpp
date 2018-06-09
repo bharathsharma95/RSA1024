@@ -8,6 +8,8 @@ using namespace std;
 
 ap_uint<1024> modexp(ap_uint<1024> base, ap_uint<1024> exp, ap_uint<1024> n_modulus);
 ap_uint<1024> modinv(ap_uint<1024> a, ap_uint<1024> m);
+ap_int<1024> gcdExtended(ap_uint<1024> a, ap_uint<1024> b, ap_uint<1024> *x, ap_uint<1024> *y);
+
 
 int test();
 
@@ -31,7 +33,7 @@ cout << "\n\n";
 	ap_uint<1024> m = 4;
 	cout << "m is: " << m << "\n";
 
-	ap_uint<1024> d = modinv(e,n);
+	ap_uint<1024> d = modinv(e,phi_n);
 	cout << "d is: " << d << "\n";
 
 	ap_uint<1024> C = modexp(m,e,n);
@@ -67,17 +69,37 @@ return C;
 }
 
 
-ap_uint<1024> modinv(ap_uint<1024> a, ap_uint<1024> m)
+ap_uint<1024> modinv(ap_uint<1024> a, ap_uint<1024> phi_n)
 {
-    a = a%m;
-    for (int x=1; x<m; x++)
+	ap_uint<1024> x, y;
+	ap_int<1024> g = gcdExtended(a, phi_n, &x, &y);
+
+	        // phi_n is added to handle negative x
+	    	ap_int<1024> res = (x % phi_n + phi_n) % phi_n;
+	        cout << "Modular multiplicative inverse is " << res;
+
+
+return res;
+}
+
+ap_int<1024> gcdExtended(ap_int<1024> a, ap_int<1024> b, ap_uint<1024> *x, ap_uint<1024> *y)
+{
+    // Base Case
+    if (a == 0)
     {
-       if ((a*x) % m == 1)
-       {
-          return x;
-       }
+        *x = 0, *y = 1;
+        return b;
     }
-    return 0;
+
+    ap_uint<1024> x1, y1; // To store results of recursive call
+    ap_int<1024> gcd = gcdExtended(b%a, a, &x1, &y1);
+
+    // Update x and y using results of recursive
+    // call
+    *x = y1 - (b/a) * x1;
+    *y = x1;
+
+return gcd;
 }
 
 /* Redundant/trial code
