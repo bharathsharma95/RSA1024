@@ -56,9 +56,7 @@ ap_uint<1024> modinv(ap_uint<1024> a, ap_uint<1024> phi_n)
 	    else
 	    {
 	        // phi_n is added to handle negative x
-	    	ap_uint<1024> helper1 = x % phi_n;
-	    	ap_uint<1024> helper2 = helper1 + phi_n;
-	        res = helper2 % phi_n;
+	        res = ((x % phi_n) + phi_n) % phi_n;
 	        //cout << "Modular multiplicative inverse is " << res <<"\n";
 	    }
 
@@ -76,14 +74,11 @@ ap_uint<1024> gcdExtended(ap_uint<1024> a, ap_uint<1024> b, ap_uint<1024> *x, ap
     }
 
     ap_uint<1024> x1, y1; // To store results of recursive call
-    ap_uint<1024> b_mod_a = b%a;
-    ap_int<1024> gcd = gcdExtended(b_mod_a, a, &x1, &y1);
+    ap_int<1024> gcd = gcdExtended(b%a, a, &x1, &y1);
 
     // Update x and y using results of recursive
     // call
-    ap_uint<1024> b_div_a = b/a;
-    ap_uint<1024> helper = (b_div_a) * x1;
-    *x = y1 - helper;
+    *x = y1 - ((b/a) * x1);
     *y = x1;
 
     return gcd;
