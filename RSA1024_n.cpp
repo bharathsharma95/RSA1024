@@ -52,7 +52,7 @@ ap_uint<1024> modinv(ap_uint<1024> a, ap_uint<1024> phi_n)
 	ap_uint<1024> g = gcdExtended(a, phi_n, &x, &y);
 	ap_uint<1024> res;
 	if (g != 1)
-	        cout << "Inverse doesn't exist";
+	        cout << "Inverse doesn't exist\n";
 	    else
 	    {
 	        // phi_n is added to handle negative x
