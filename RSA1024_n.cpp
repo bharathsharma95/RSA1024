@@ -1,5 +1,6 @@
 #include <iostream>
-#define AP_INT_MAX_W 4096
+//# define NDEBUG
+#define AP_INT_MAX_W 2048
 #include <ap_int.h>
 
 using namespace std;
@@ -21,22 +22,24 @@ int test()
 	ap_uint<512> p_1 = p-1;
 	ap_uint<512> q_1 = q-1;
 
-	ap_uint<1024> phi_n = p_1 * q_1;						//phi_n
+	ap_uint<1024> phi_n = p_1 * q_1;					//phi_n
 	cout << "phi_n is: " << phi_n << "\n";
 
 	ap_uint<1024> e = 65537;							//e
 	cout << "e is: " << e << "\n";
 
 	ap_uint<1024> m = 65;								//m
-	cout << "m is: " << m << "\n";
+	cout << "m is: " << m << "\n\n\n";
 
-	ap_uint<1024> d = modinv(e,phi_n);						//d
-	cout << "d is: " << d << "\n";
+	cout << "\n****************************************************************************\n";
+	ap_uint<1024> d = modinv(e,phi_n);					//d
+	cout << "d is: " << d << "\n\n\n";
+	cout << "****************************************************************************\n";
 
-	ap_uint<1024> C = modexp(m,e,n);						//Cipher  = m^e mod n
+	ap_uint<1024> C = modexp(m,e,n);					//Cipher  = m^e mod n
 	cout << "C is: " << C << "\n";
 
-	ap_uint<1024> M = modexp(C,d,n);						//Message = C^d mod n
+	ap_uint<1024> M = modexp(C,d,n);					//Message = C^d mod n
 	cout << "M is: " << M << "\n";
 
 	cout << "\n\n";
@@ -48,21 +51,23 @@ int test()
 
 ap_uint<1024> modinv(ap_uint<1024> a, ap_uint<1024> phi_n)
 {
-	ap_uint<1024> x, y;
-	ap_uint<1024> g = gcdExtended(a, phi_n, &x, &y);
-	ap_uint<1024> res;
-	if (g != 1)
-	        cout << "Inverse doesn't exist\n";
-	    else
-	    {
-	        // phi_n is added to handle negative x
-	        res = ((x % phi_n) + phi_n) % phi_n;
-	        //cout << "Modular multiplicative inverse is " << res <<"\n";
-	    }
+		ap_uint<1024> x, y;
+		ap_uint<1024> g = gcdExtended(a, phi_n, &x, &y);
+		cout <<"gcd is: "<<g<<"\n";
 
-	return res;
+		ap_uint<1024> res;
+			if (g != 1)
+			        cout << "Inverse doesn't exist\n";
+		    else
+		    {
+		        // phi_n is added to handle negative x
+		        res = ((x % phi_n) + phi_n) % phi_n;
+		        cout << "x is : "<< x << "\n";
+		        cout << "Modular multiplicative inverse is " << res <<"\n";
+		    }
+
+		return res;
 }
-
 
 ap_uint<1024> gcdExtended(ap_uint<1024> a, ap_uint<1024> b, ap_uint<1024> *x, ap_uint<1024> *y)
 {
@@ -70,16 +75,23 @@ ap_uint<1024> gcdExtended(ap_uint<1024> a, ap_uint<1024> b, ap_uint<1024> *x, ap
     if (a == 0)
     {
         *x = 0, *y = 1;
+        cout<<"returning b="<<b<<"\n";
         return b;
     }
 
     ap_uint<1024> x1, y1; // To store results of recursive call
     ap_int<1024> gcd = gcdExtended(b%a, a, &x1, &y1);
 
-    // Update x and y using results of recursive
-    // call
+    cout<<"x1:"<<x1<<"\n";
+    cout<<"y1:"<<y1<<"\n";
+
+    // Update x and y using results of recursive call
     *x = y1 - ((b/a) * x1);
+    //cout<<"*x:"<<*x<<"\n";
     *y = x1;
+    //cout<<"*y:"<<*y<<"\n";
+    cout<<"a:"<<a<<"\n";
+    cout<<"b:"<<b<<"\n\n";
 
     return gcd;
 }
@@ -98,13 +110,6 @@ ap_uint<1024> modexp(ap_uint<1024> base, ap_uint<1024> exp, ap_uint<1024> n_modu
 	        exp = exp >> 1;
 	        base = (base * base) % n_modulus;
 	    }
-
-	    //comment this section out later
-	    /*
-	    cout << "\n*****************************\n";
-	    cout << "base = (base * base) % n_modulus\n is \n" << base;
-	    cout << "\n*****************************\n";
-	    */
 
 	return C;
 }
