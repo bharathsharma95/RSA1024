@@ -26,7 +26,7 @@ int test()
 	ap_uint<512> p_1 = p-1;
 	ap_uint<512> q_1 = q-1;
 
-	ap_uint<1024> phi_n = p_1 * q_1;					//phi_n
+	ap_uint<1024> phi_n = p_1 * q_1;						//phi_n
 	cout << "phi_n is: " << phi_n << "\n";
 
 	ap_uint<1024> e = 65537;							//e
@@ -36,14 +36,14 @@ int test()
 	cout << "m is: " << m << "\n";
 
 	cout << "\n****************************************************************************\n";
-	ap_uint<1024> d = modinv(e,phi_n);					//d
+	ap_uint<1024> d = modinv(e,phi_n);						//d
 	cout << "d is: " << d << "\n";
 	cout << "****************************************************************************\n";
 
-	ap_uint<1024> C = modexp(m,e,n);					//Cipher  = m^e mod n
+	ap_uint<1024> C = modexp(m,e,n);						//Cipher  = m^e mod n
 	cout << "C is: " << C << "\n";
 
-	ap_uint<1024> M = modexp(C,d,n);					//Message = C^d mod n
+	ap_uint<1024> M = modexp(C,d,n);						//Message = C^d mod n
 	cout << "M is: " << M << "\n";
 
 	cout << "\n\n";
@@ -210,3 +210,6 @@ ap_uint<1024> modexp(ap_uint<1024> base, ap_uint<1024> exp, ap_uint<1024> n_modu
 
 	return Res;
 }
+
+
+
