@@ -4,39 +4,41 @@
 
 using namespace std;
 
+/* Global variables used in the code*/
 ap_uint<1024> temp_arr[13] = {0};
 ap_uint<1024> a_arr[13] = {0};
 ap_uint<1024> b_arr[13] = {0};
 ap_uint<1024> x_arr[13] = {0};
 ap_uint<1024> y_arr[13] = {0};
 
+/* decleration of functions */
 int test();
-
 ap_uint<1024> modinv(ap_uint<1024> a, ap_uint<1024> m);
 ap_uint<1024> modexp(ap_uint<1024> base, ap_uint<1024> exp, ap_uint<1024> n_modulus);
 
 int test()
 {
+	/* Two 512-bit prime numbers to calculate the modulo */
 	ap_uint<512> p = "656692050181897513638241554199181923922955921760928836766304161790553989228223793461834703506872747071705167995972707253940099469869516422893633357693";
 	ap_uint<512> q = "204616454475328391399619135615615385636808455963116802820729927402260635621645177248364272093977747839601125961863785073671961509749189348777945177811";
 
-	ap_uint<1024> n = p * q;							//n
+	ap_uint<1024> n = p * q;							//n is the modulo
 	cout << "n is: " << n << "\n";
 
 	ap_uint<512> p_1 = p-1;
 	ap_uint<512> q_1 = q-1;
 
-	ap_uint<1024> phi_n = p_1 * q_1;						//phi_n
+	ap_uint<1024> phi_n = p_1 * q_1;						//phi_n is the Euler's Totient
 	cout << "phi_n is: " << phi_n << "\n";
 
-	ap_uint<1024> e = 65537;							//e
+	ap_uint<1024> e = 65537;							//e is the encryption key (public)
 	cout << "e is: " << e << "\n";
 
-	ap_uint<1024> m = 65;								//m
+	ap_uint<1024> m = 65;								//m is the message to encrypt
 	cout << "m is: " << m << "\n";
 
 	cout << "\n****************************************************************************\n";
-	ap_uint<1024> d = modinv(e,phi_n);						//d
+	ap_uint<1024> d = modinv(e,phi_n);						//d is the decryption key (private)
 	cout << "d is: " << d << "\n";
 	cout << "****************************************************************************\n";
 
@@ -52,7 +54,9 @@ int test()
 }
 
 
-
+/* Function that calculates the modular inverse of 'e' and 'phi_n' and returns the modular inverse
+   which is the decryption key
+*/
 ap_uint<1024> modinv(ap_uint<1024>a, ap_uint<1024>b)
 {
 
@@ -167,7 +171,7 @@ ap_uint<1024> modinv(ap_uint<1024>a, ap_uint<1024>b)
 					//cout << "b_arr[" << count << "] : " << b_arr[count] << "\n\n";
 
 
-	// when count == 0 --> end
+	// when count == 0 --> ends
 
 
 
@@ -194,7 +198,9 @@ ap_uint<1024> modinv(ap_uint<1024>a, ap_uint<1024>b)
 }
 
 
-
+/* Modular exponentiation function implemented from the paper:
+   https://link.springer.com/chapter/10.1007/978-3-662-47401-3_15
+*/
 ap_uint<1024> modexp(ap_uint<1024> base, ap_uint<1024> exp, ap_uint<1024> n_modulus)
 {
 	ap_uint<1024> Res = 1;
